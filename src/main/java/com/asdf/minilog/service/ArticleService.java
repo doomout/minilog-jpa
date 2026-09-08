@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(isolation = Isolation.REPEATABLE_READ)
 public class ArticleService { // 게시글과 관련된 비즈니스 로직
@@ -69,5 +71,27 @@ public class ArticleService { // 게시글과 관련된 비즈니스 로직
             ));
 
         return EntityDtoMapper.toDto(article);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ArticleResponseDto> getFeedListByFollowerId(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new UserNotFoundException(
+                        String.format("해당 아이디(%d)를 가진 게시글을 찾을 수 없스니다.", userId)
+                ));
+
+        var feedList = articleRepository.findAllByFollowerId(user.getId());
+        return feedList.stream().map(EntityDtoMapper::toDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ArticleResponseDto> getArticleListByUserId(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new UserNotFoundException(
+                        String.format("해당 아이디(%d)를 가진 사용자를 찾을 수 없스니다.", userId)
+                ));
+
+        var articlesList = articleRepository.findAllByAuthorId(user.getId());
+        return articlesList.stream().map(EntityDtoMapper::toDto).toList();
     }
 }
