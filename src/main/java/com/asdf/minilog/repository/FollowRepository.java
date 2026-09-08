@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FollowerRepository extends JpaRepository<Follow, Long> { // Follow Entity 와 DB 연산을 담당
+public interface FollowRepository extends JpaRepository<Follow, Long> { // Follow Entity 와 DB 연산을 담당
     // 특성 사용자가 팔로우하는 사용자 목록을 조회하는 메서드
     List<Follow> findByFollowerId(Long followerId);
 
