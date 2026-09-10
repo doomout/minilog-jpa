@@ -1,5 +1,6 @@
 package com.asdf.minilog.controller;
 
+import com.asdf.minilog.dto.UserRequestDto;
 import com.asdf.minilog.dto.UserResponseDto;
 import com.asdf.minilog.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -7,10 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -42,5 +40,34 @@ public class UserController { // 사용자가 관련된 요청을 처리하는 �
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PostMapping
+    @Operation(summary = "사용자 생성")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto user) {
+        UserResponseDto createdUser = userService.createUser(user);
 
+        return ResponseEntity.ok(createdUser);
+    }
+
+    @PutMapping("/{userId}")
+    @Operation(summary = "사용자 수정")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음")
+    })
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @RequestBody UserRequestDto updatedUser) {
+        UserResponseDto user = userService.updatedUser(userId, updatedUser);
+        return ResponseEntity.ok(user);
+    }
+
+    @DeleteMapping("/{userId}")
+    @Operation(summary = "사용자 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음")
+    })
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
+    }
 }
