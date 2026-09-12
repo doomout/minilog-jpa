@@ -24,6 +24,7 @@ Spring Boot와 JPA를 기반으로 간단한 MiniLog 애플리케이션을 구�
 - Testcontainers
 - JUnit 5
 - Spotless
+- Spring Security 
 
 ## 주요 의존성
 
@@ -50,6 +51,8 @@ Spring Boot와 JPA를 기반으로 간단한 MiniLog 애플리케이션을 구�
 
 - `spotless`
     - Java 코드 포맷 자동화
+  - 'spring-boot-starter-security'
+    - 스프링 시큐리티 
 
 ## MySQL Docker 환경
 
@@ -64,3 +67,8 @@ docker run --name mysql-minilog \
   -p 3307:3306 \
   -v mysql-minilog-data:/var/lib/mysql \
   -d mysql:8.0
+```
+```bash
+// jwt 생성하고 검증할 때 사용할 비밀키 생성 명령어
+openssl rand -base64 32
+```
