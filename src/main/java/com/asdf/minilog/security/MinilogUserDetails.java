@@ -15,5 +15,5 @@ public class MinilogUserDetails implements UserDetails { // 사용자 정보를 
     private Long id;
     private String username; // 사용자명
     private String password; // 비밀번호
-    private Collection<? extends GrantedAuthority> authorities; // 권한
+    private Collection<? extends GrantedAuthority> authorities; // 권한(정확한 타입은 모르겠는데 최소한 GrantedAuthority 계열이어야 한다)
 }
