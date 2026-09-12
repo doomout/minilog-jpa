@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Configuration;
 public class ApiDocumentationConfig { // API 문서화를 위한 Swagger 설정을 수행
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI().info(
-                new Info()
-                        .title("Minilog API")
-                        .version("1.0")
-                        .description("API documentation for the Minilog project")
-        );
+        return new OpenAPI()
+                .info(
+                        new Info()
+                                .title("Minilog API")
+                                .version("1.0")
+                                .description("API documentation for the Minilog project"));
     }
 }

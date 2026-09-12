@@ -6,11 +6,10 @@ import com.asdf.minilog.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -32,8 +31,8 @@ public class UserController { // 사용자가 관련된 요청을 처리하는 �
     @GetMapping("/{userId}")
     @Operation(summary = "사용자 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long userId) {
         Optional<UserResponseDto> user = userService.getUserById(userId);
@@ -52,10 +51,11 @@ public class UserController { // 사용자가 관련된 요청을 처리하는 �
     @PutMapping("/{userId}")
     @Operation(summary = "사용자 수정")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @RequestBody UserRequestDto updatedUser) {
+    public ResponseEntity<UserResponseDto> updateUser(
+            @PathVariable Long userId, @RequestBody UserRequestDto updatedUser) {
         UserResponseDto user = userService.updatedUser(userId, updatedUser);
         return ResponseEntity.ok(user);
     }
@@ -63,8 +63,8 @@ public class UserController { // 사용자가 관련된 요청을 처리하는 �
     @DeleteMapping("/{userId}")
     @Operation(summary = "사용자 삭제")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);

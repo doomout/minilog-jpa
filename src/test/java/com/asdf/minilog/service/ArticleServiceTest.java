@@ -1,4 +1,3 @@
 package com.asdf.minilog.service;
 
-public class ArticleServiceTest {
-}
+public class ArticleServiceTest {}

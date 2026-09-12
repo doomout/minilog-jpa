@@ -6,11 +6,10 @@ import com.asdf.minilog.service.FollowService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/follow")
@@ -25,8 +24,8 @@ public class FollowController { // 팔로우 및 언팔로우 관련 요청 처�
     @PostMapping
     @Operation(summary = "팔로우")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
     public ResponseEntity<FollowResponseDto> follow(@RequestBody FollowRequestDto request) {
         Long followerId = request.getFollowerId();
@@ -40,8 +39,8 @@ public class FollowController { // 팔로우 및 언팔로우 관련 요청 처�
     @DeleteMapping("/{followerId}/{followeeId}")
     @Operation(summary = "언팔로우")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
     public ResponseEntity<Void> unfollow(
             @PathVariable Long followerId, @PathVariable Long followeeId) {
@@ -53,8 +52,8 @@ public class FollowController { // 팔로우 및 언팔로우 관련 요청 처�
     @GetMapping("/{followerId}")
     @Operation(summary = "팔로잉 목록 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
     public ResponseEntity<List<FollowResponseDto>> getFollowList(@PathVariable Long followerId) {
         List<FollowResponseDto> follows = followService.getFollowList(followerId);

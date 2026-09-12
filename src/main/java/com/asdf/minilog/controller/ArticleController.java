@@ -6,11 +6,10 @@ import com.asdf.minilog.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/article")
@@ -25,12 +24,14 @@ public class ArticleController { // 게시글과 관련된 요청 처리
     @PostMapping
     @Operation(summary = "포스트 생성")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
-    public ResponseEntity<ArticleResponseDto> createArticle(@RequestBody ArticleRequestDto article) {
+    public ResponseEntity<ArticleResponseDto> createArticle(
+            @RequestBody ArticleRequestDto article) {
         Long userId = article.getAuthorId();
-        ArticleResponseDto createdArticle = articleService.createArticle(article.getContent(), userId);
+        ArticleResponseDto createdArticle =
+                articleService.createArticle(article.getContent(), userId);
 
         return ResponseEntity.ok(createdArticle);
     }
@@ -38,8 +39,8 @@ public class ArticleController { // 게시글과 관련된 요청 처리
     @GetMapping("/{articleId}")
     @Operation(summary = "포스트 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "포스트 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "포스트 없음")
     })
     public ResponseEntity<ArticleResponseDto> getArticle(@PathVariable Long articleId) {
         var article = articleService.getArticleById(articleId);
@@ -50,10 +51,11 @@ public class ArticleController { // 게시글과 관련된 요청 처리
     @PutMapping("/{articleId}")
     @Operation(summary = "포스트 수정")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "포스트 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "포스트 없음")
     })
-    public ResponseEntity<ArticleResponseDto> updateArticle(@PathVariable Long articleId, @RequestBody ArticleRequestDto article) {
+    public ResponseEntity<ArticleResponseDto> updateArticle(
+            @PathVariable Long articleId, @RequestBody ArticleRequestDto article) {
 
         var updateArticle = articleService.updatedArticle(articleId, article.getContent());
 
@@ -63,8 +65,8 @@ public class ArticleController { // 게시글과 관련된 요청 처리
     @DeleteMapping("/{articleId}")
     @Operation(summary = "포스트 삭제")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "삭제됨"),
-            @ApiResponse(responseCode = "404", description = "포스트 없음")
+        @ApiResponse(responseCode = "204", description = "삭제됨"),
+        @ApiResponse(responseCode = "404", description = "포스트 없음")
     })
     public ResponseEntity<Void> deleteArticle(@PathVariable Long articleId) {
 
@@ -76,10 +78,11 @@ public class ArticleController { // 게시글과 관련된 요청 처리
     @GetMapping
     @Operation(summary = "유저의 게시글 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "게시글 없음")
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "게시글 없음")
     })
-    public ResponseEntity<List<ArticleResponseDto>> getArticleByUserId(@RequestParam Long authorId) {
+    public ResponseEntity<List<ArticleResponseDto>> getArticleByUserId(
+            @RequestParam Long authorId) {
         var articleList = articleService.getArticleListByUserId(authorId);
 
         return ResponseEntity.ok(articleList);

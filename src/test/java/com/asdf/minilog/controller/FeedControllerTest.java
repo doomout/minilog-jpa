@@ -1,4 +1,3 @@
 package com.asdf.minilog.controller;
 
-public class FeedControllerTest {
-}
+public class FeedControllerTest {}

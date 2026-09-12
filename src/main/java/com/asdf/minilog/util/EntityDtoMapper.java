@@ -26,10 +26,7 @@ public class EntityDtoMapper { // Entity <-> DTO 사이의 변환을 담당
     }
 
     public static UserResponseDto toDto(User user) {
-        return UserResponseDto.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .build();
+        return UserResponseDto.builder().id(user.getId()).username(user.getUsername()).build();
     }
 
     public static Follow toEntity(Long followerId, Long followeeId) {

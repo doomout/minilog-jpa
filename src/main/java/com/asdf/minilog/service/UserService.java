@@ -6,18 +6,17 @@ import com.asdf.minilog.entity.User;
 import com.asdf.minilog.exception.UserNotFoundException;
 import com.asdf.minilog.repository.UserRepository;
 import com.asdf.minilog.util.EntityDtoMapper;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
 public class UserService { // 사용자 관련 비즈니스 로직
-    //사용자 DB 접근을 담당하는 Repository
+    // 사용자 DB 접근을 담당하는 Repository
     private final UserRepository userRepository;
 
     // 생성자 주입
@@ -53,16 +52,17 @@ public class UserService { // 사용자 관련 비즈니스 로직
         // 같은 username을 가진 사용자가 이미 존재하는지 확인
         // findByUsername() 역시 Spring Data JPA가 메서드 이름을 분석하여
         // 조회 쿼리를 자동 생성한다.
-        if(userRepository.findByUsername(userRequestDto.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(userRequestDto.getUsername()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 사용자 이릅입니다.");
         }
 
         // DTO로 전달받은 값을 이용하여 새로운 User Entity 생성
-        User savedUser = userRepository.save(
-                User.builder()
-                .username(userRequestDto.getUsername())
-                .password(userRequestDto.getPassword())
-                .build());
+        User savedUser =
+                userRepository.save(
+                        User.builder()
+                                .username(userRequestDto.getUsername())
+                                .password(userRequestDto.getPassword())
+                                .build());
 
         // 저장된 User Entity를 응답용 DTO로 변환하여 반환
         return EntityDtoMapper.toDto(savedUser);
@@ -72,10 +72,14 @@ public class UserService { // 사용자 관련 비즈니스 로직
     public UserResponseDto updatedUser(Long userId, UserRequestDto userRequestDto) {
         // 수정할 사용자가 실제로 존재하는지 조회
         // 없으면 UserNotFoundException 발생
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new UserNotFoundException(
-                        String.format("해당 아이디(%d)를 가진 사용자를 찾을수 없습니다.", userId)
-                ));
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(
+                                () ->
+                                        new UserNotFoundException(
+                                                String.format(
+                                                        "해당 아이디(%d)를 가진 사용자를 찾을수 없습니다.", userId)));
 
         // 조회한 User Entity의 값 변경
         user.setUsername(userRequestDto.getUsername());
@@ -92,10 +96,14 @@ public class UserService { // 사용자 관련 비즈니스 로직
     public void deleteUser(Long userId) {
         // 삭제할 사용자가 실제로 존재하는지 확인
         // 존재하지 않으면 예외 발생
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new UserNotFoundException(
-                        String.format("해당 아이디(%d)를 가진 사용자를 찾을 수 없습니다.",userId)
-                ));
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(
+                                () ->
+                                        new UserNotFoundException(
+                                                String.format(
+                                                        "해당 아이디(%d)를 가진 사용자를 찾을 수 없습니다.", userId)));
 
         // 조회한 사용자의 ID를 이용하여 삭제
         userRepository.deleteById(user.getId());
