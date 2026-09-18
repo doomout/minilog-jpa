@@ -108,4 +108,13 @@ public class UserService { // 사용자 관련 비즈니스 로직
         // 조회한 사용자의 ID를 이용하여 삭제
         userRepository.deleteById(user.getId());
     }
+
+    public UserResponseDto getUserByUsername(String username) {
+        return userRepository.findByUsername(username).map(EntityDtoMapper::toDto).orElseThrow(
+                () ->
+                        new UserNotFoundException(
+                                String.format("해당 이름(%s)을 가진 사용자를 찾을 수 없습니다.", username)
+                        )
+        );
+    }
 }
