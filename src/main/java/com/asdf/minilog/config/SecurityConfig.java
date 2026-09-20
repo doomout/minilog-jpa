@@ -28,6 +28,7 @@ public class SecurityConfig{
     @Autowired
     public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtRequestFilter jwtRequestFilter) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Bean
@@ -43,13 +44,15 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
-                (requests) ->
-                        requests.requestMatchers("/api/v2/auth/login","/swagger-ui/**","/v3/api-docs/**")
+                (requests) -> requests
+                        .requestMatchers("/api/v2/auth/login","/swagger-ui/**","/v3/api-docs/**")
                         .permitAll()
+                        //사용자 생성, 조회는 인증 없이 가능
                         .requestMatchers(HttpMethod.POST,"/api/v2/user/{userId}")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v2/user/{userId}")
                         .permitAll()
+                        // 사용자 삭제는 ADMIN 권한 필요
                         .requestMatchers(HttpMethod.DELETE, "/api/v2/user/{userId}")
                         .hasRole("ADMIN")
                         .anyRequest()
