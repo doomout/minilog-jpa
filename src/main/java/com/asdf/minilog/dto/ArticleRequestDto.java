@@ -17,5 +17,5 @@ public class ArticleRequestDto { // 게시글 작성, 수정 요청용 DTO
           required = true,
           deprecated = true
     )
-    @NonNull private Long authorId;
+    private Long authorId;
 }
