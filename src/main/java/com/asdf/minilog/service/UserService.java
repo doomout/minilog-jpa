@@ -4,8 +4,10 @@ import com.asdf.minilog.dto.UserRequestDto;
 import com.asdf.minilog.dto.UserResponseDto;
 import com.asdf.minilog.entity.Role;
 import com.asdf.minilog.entity.User;
+import com.asdf.minilog.exception.NotAuthorizedException;
 import com.asdf.minilog.exception.UserNotFoundException;
 import com.asdf.minilog.repository.UserRepository;
+import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.util.EntityDtoMapper;
 
 import java.util.HashSet;
@@ -82,7 +84,12 @@ public class UserService { // 사용자 관련 비즈니스 로직
     }
 
     // 사용자 정보 수정
-    public UserResponseDto updatedUser(Long userId, UserRequestDto userRequestDto) {
+    public UserResponseDto updatedUser(MinilogUserDetails userDetails, Long userId, UserRequestDto userRequestDto) {
+        if(!userDetails.getAuthorities().stream().anyMatch(
+                authority -> authority.getAuthority().equals(Role.ROLE_ADMIN.name())
+        ) && !userDetails.getId().equals(userId)) {
+            throw new NotAuthorizedException("권한이 없습니다.");
+        }
         // 수정할 사용자가 실제로 존재하는지 조회
         // 없으면 UserNotFoundException 발생
         User user =
@@ -122,6 +129,7 @@ public class UserService { // 사용자 관련 비즈니스 로직
         userRepository.deleteById(user.getId());
     }
 
+    // 사용자를 찾을 수 없을 때
     public UserResponseDto getUserByUsername(String username) {
         return userRepository.findByUsername(username).map(EntityDtoMapper::toDto).orElseThrow(
                 () ->
