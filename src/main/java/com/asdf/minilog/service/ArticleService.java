@@ -64,7 +64,7 @@ public class ArticleService { // 게시글과 관련된 비즈니스 로직
     }
 
     // 게시글 수정
-    public ArticleResponseDto updatedArticle(Long articleId, String content) {
+    public ArticleResponseDto updatedArticle(Long authorId, Long articleId, String content) {
         Article article =
                 articleRepository
                         .findById(articleId)
@@ -74,6 +74,10 @@ public class ArticleService { // 게시글과 관련된 비즈니스 로직
                                                 String.format(
                                                         "해당 아이디(%d)를 가진 게시글을 찾을수 없습니다.",
                                                         articleId)));
+
+        if(!article.getAuthor().getId().equals(authorId)) {
+            throw new NotAuthorizedException("게시글 작성자만 수정할 수 있습니다.");
+        }
 
         article.setContent(content);
         Article updatedArticle = articleRepository.save(article);
