@@ -2,10 +2,13 @@ package com.asdf.minilog.service;
 
 import com.asdf.minilog.dto.UserRequestDto;
 import com.asdf.minilog.dto.UserResponseDto;
+import com.asdf.minilog.entity.Role;
 import com.asdf.minilog.entity.User;
 import com.asdf.minilog.exception.UserNotFoundException;
 import com.asdf.minilog.repository.UserRepository;
 import com.asdf.minilog.util.EntityDtoMapper;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,12 +59,22 @@ public class UserService { // 사용자 관련 비즈니스 로직
             throw new IllegalArgumentException("이미 존재하는 사용자 이릅입니다.");
         }
 
+        // 사용자 생성시 ROLE_AUTHOR 권한 부여
+        HashSet<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_AUTHOR);
+
+        // 사용자 이름이 admin 인 경우 ROLE_ADMIN 권한 추가
+        if(userRequestDto.getUsername().equals("admin")) {
+            roles.add(Role.ROLE_ADMIN);
+        }
+
         // DTO로 전달받은 값을 이용하여 새로운 User Entity 생성
         User savedUser =
                 userRepository.save(
                         User.builder()
                                 .username(userRequestDto.getUsername())
                                 .password(userRequestDto.getPassword())
+                                .roles(roles)
                                 .build());
 
         // 저장된 User Entity를 응답용 DTO로 변환하여 반환
