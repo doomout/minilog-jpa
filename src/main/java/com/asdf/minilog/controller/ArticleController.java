@@ -72,9 +72,11 @@ public class ArticleController { // 게시글과 관련된 요청 처리
         @ApiResponse(responseCode = "204", description = "삭제됨"),
         @ApiResponse(responseCode = "404", description = "포스트 없음")
     })
-    public ResponseEntity<Void> deleteArticle(@PathVariable Long articleId) {
+    public ResponseEntity<Void> deleteArticle(
+            @AuthenticationPrincipal MinilogUserDetails userDetails, //인증된 사용자의 ID를 가져옴
+            @PathVariable Long articleId) {
 
-        articleService.deleteArticle(articleId);
+        articleService.deleteArticle(userDetails.getId(), articleId);
 
         return ResponseEntity.noContent().build();
     }
