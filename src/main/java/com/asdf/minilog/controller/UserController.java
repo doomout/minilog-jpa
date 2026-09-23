@@ -2,6 +2,7 @@ package com.asdf.minilog.controller;
 
 import com.asdf.minilog.dto.UserRequestDto;
 import com.asdf.minilog.dto.UserResponseDto;
+import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -55,8 +57,10 @@ public class UserController { // 사용자가 관련된 요청을 처리하는 �
         @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
     public ResponseEntity<UserResponseDto> updateUser(
-            @PathVariable Long userId, @RequestBody UserRequestDto updatedUser) {
-        UserResponseDto user = userService.updatedUser(userId, updatedUser);
+            @AuthenticationPrincipal MinilogUserDetails userDetails,
+            @PathVariable Long userId,
+            @RequestBody UserRequestDto updatedUser) {
+        UserResponseDto user = userService.updatedUser(userDetails, userId, updatedUser);
         return ResponseEntity.ok(user);
     }
 
