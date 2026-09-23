@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,6 +66,7 @@ public class UserController { // 사용자가 관련된 요청을 처리하는 �
     }
 
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')") // ADMIN  권한이 있을 때만 삭제 가능
     @Operation(summary = "사용자 삭제")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "성공"),
