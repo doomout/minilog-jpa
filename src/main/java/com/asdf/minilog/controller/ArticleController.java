@@ -57,9 +57,11 @@ public class ArticleController { // 게시글과 관련된 요청 처리
         @ApiResponse(responseCode = "404", description = "포스트 없음")
     })
     public ResponseEntity<ArticleResponseDto> updateArticle(
-            @PathVariable Long articleId, @RequestBody ArticleRequestDto article) {
+            @AuthenticationPrincipal MinilogUserDetails userDetails, //인증된 사용자의 ID를 가져옴
+            @PathVariable Long articleId,
+            @RequestBody ArticleRequestDto article) {
 
-        var updateArticle = articleService.updatedArticle(articleId, article.getContent());
+        var updateArticle = articleService.updatedArticle(userDetails.getId(), articleId, article.getContent());
 
         return ResponseEntity.ok(updateArticle);
     }
