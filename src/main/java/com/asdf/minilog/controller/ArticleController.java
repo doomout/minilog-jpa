@@ -2,6 +2,7 @@ package com.asdf.minilog.controller;
 
 import com.asdf.minilog.dto.ArticleRequestDto;
 import com.asdf.minilog.dto.ArticleResponseDto;
+import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,10 +10,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/article")
+@RequestMapping("/api/v2/article")
 public class ArticleController { // 게시글과 관련된 요청 처리
     private final ArticleService articleService;
 
@@ -28,10 +30,10 @@ public class ArticleController { // 게시글과 관련된 요청 처리
         @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
     public ResponseEntity<ArticleResponseDto> createArticle(
+            @AuthenticationPrincipal MinilogUserDetails userDetails, // 인증된 사용자 ID를 받아옴
             @RequestBody ArticleRequestDto article) {
-        Long userId = article.getAuthorId();
         ArticleResponseDto createdArticle =
-                articleService.createArticle(article.getContent(), userId);
+                articleService.createArticle(article.getContent(), userDetails.getId());
 
         return ResponseEntity.ok(createdArticle);
     }
