@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/feed")
+@RequestMapping("/api/v2/feed")
 public class FeedController { // 피드와 관련된 요청 처리
     private final ArticleService articleService;
 
