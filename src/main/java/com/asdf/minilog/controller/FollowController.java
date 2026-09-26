@@ -40,15 +40,16 @@ public class FollowController { // 팔로우 및 언팔로우 관련 요청 처�
         return ResponseEntity.ok(follow);
     }
 
-    @DeleteMapping("/{followerId}/{followeeId}")
+    @DeleteMapping("/{followeeId}")
     @Operation(summary = "언팔로우")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "사용자 없음")
     })
     public ResponseEntity<Void> unfollow(
-            @PathVariable Long followerId, @PathVariable Long followeeId) {
-        followService.unfollow(followerId, followeeId);
+            @AuthenticationPrincipal MinilogUserDetails userDetails,
+            @PathVariable Long followeeId) {
+        followService.unfollow(userDetails.getId(), followeeId);
 
         return ResponseEntity.ok().build();
     }
