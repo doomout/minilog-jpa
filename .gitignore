@@ -36,3 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 .env
+
+# 로컬 Spring 설정 (JWT Secret 등 포함)
+src/main/resources/application.properties
