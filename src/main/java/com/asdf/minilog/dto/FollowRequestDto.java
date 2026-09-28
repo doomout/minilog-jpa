@@ -11,8 +11,7 @@ public class FollowRequestDto { // 팔로우 요청을 위한 DTO
             description = "팔로우 ID(이 필드는 더 이상 사용되지 않습니다.)",
             example = "0",
             required = true,
-            deprecated = true
-    )
+            deprecated = true)
     private Long followerId;
 
     @NonNull private Long followeeId;

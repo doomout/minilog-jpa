@@ -9,7 +9,6 @@ import com.asdf.minilog.exception.UserNotFoundException;
 import com.asdf.minilog.repository.UserRepository;
 import com.asdf.minilog.security.MinilogUserDetails;
 import com.asdf.minilog.util.EntityDtoMapper;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +65,7 @@ public class UserService { // 사용자 관련 비즈니스 로직
         roles.add(Role.ROLE_AUTHOR);
 
         // 사용자 이름이 admin 인 경우 ROLE_ADMIN 권한 추가
-        if(userRequestDto.getUsername().equals("admin")) {
+        if (userRequestDto.getUsername().equals("admin")) {
             roles.add(Role.ROLE_ADMIN);
         }
 
@@ -84,10 +83,13 @@ public class UserService { // 사용자 관련 비즈니스 로직
     }
 
     // 사용자 정보 수정
-    public UserResponseDto updatedUser(MinilogUserDetails userDetails, Long userId, UserRequestDto userRequestDto) {
-        if(!userDetails.getAuthorities().stream().anyMatch(
-                authority -> authority.getAuthority().equals(Role.ROLE_ADMIN.name())
-        ) && !userDetails.getId().equals(userId)) {
+    public UserResponseDto updatedUser(
+            MinilogUserDetails userDetails, Long userId, UserRequestDto userRequestDto) {
+        if (!userDetails.getAuthorities().stream()
+                        .anyMatch(
+                                authority ->
+                                        authority.getAuthority().equals(Role.ROLE_ADMIN.name()))
+                && !userDetails.getId().equals(userId)) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
         // 수정할 사용자가 실제로 존재하는지 조회
@@ -131,11 +133,12 @@ public class UserService { // 사용자 관련 비즈니스 로직
 
     // 사용자를 찾을 수 없을 때
     public UserResponseDto getUserByUsername(String username) {
-        return userRepository.findByUsername(username).map(EntityDtoMapper::toDto).orElseThrow(
-                () ->
-                        new UserNotFoundException(
-                                String.format("해당 이름(%s)을 가진 사용자를 찾을 수 없습니다.", username)
-                        )
-        );
+        return userRepository
+                .findByUsername(username)
+                .map(EntityDtoMapper::toDto)
+                .orElseThrow(
+                        () ->
+                                new UserNotFoundException(
+                                        String.format("해당 이름(%s)을 가진 사용자를 찾을 수 없습니다.", username)));
     }
 }

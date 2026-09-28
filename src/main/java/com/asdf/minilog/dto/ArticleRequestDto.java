@@ -12,10 +12,9 @@ public class ArticleRequestDto { // 게시글 작성, 수정 요청용 DTO
 
     @Deprecated(since = "2.0", forRemoval = true)
     @Schema(
-          description = "작성자 ID(이 필드는 더 이상 사용되지 않습니다.)",
-          example = "0",
-          required = true,
-          deprecated = true
-    )
+            description = "작성자 ID(이 필드는 더 이상 사용되지 않습니다.)",
+            example = "0",
+            required = true,
+            deprecated = true)
     private Long authorId;
 }

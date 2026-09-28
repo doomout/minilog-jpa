@@ -30,7 +30,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 // @PreAuthorize, @PostAuthorize 등을 이용한
 // 메서드 단위의 접근 권한 검사를 활성화한다.
 @EnableMethodSecurity(prePostEnabled = true)
-public class SecurityConfig{
+public class SecurityConfig {
     // 인증되지 않은 사용자가 보호된 API에 접근했을 때
     // HTTP 401 오류 응답을 생성하는 클래스
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -48,7 +48,9 @@ public class SecurityConfig{
      * 생성자가 하나뿐이면 @Autowired를 생략해도 된다.
      */
     @Autowired
-    public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtRequestFilter jwtRequestFilter) {
+    public SecurityConfig(
+            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+            JwtRequestFilter jwtRequestFilter) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtRequestFilter = jwtRequestFilter;
     }
@@ -88,7 +90,8 @@ public class SecurityConfig{
      * AuthenticationManager를 사용할 수 있다.
      */
     @Bean
-    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManagerBean(
+            AuthenticationConfiguration configuration) throws Exception {
         // Spring Security가 구성한 AuthenticationManager를 반환한다.
         return configuration.getAuthenticationManager();
     }
@@ -129,73 +132,77 @@ public class SecurityConfig{
                  * 구체적인 규칙을 먼저 작성하는 것이 중요하다.
                  */
                 .authorizeHttpRequests(
-                (requests) -> requests
+                        (requests) ->
+                                requests
 
-                        /*
-                         * 로그인 API와 Swagger 관련 API는
-                         * 인증되지 않은 사용자도 접근할 수 있다.
-                         *
-                         * permitAll():
-                         * 로그인 여부와 관계없이 접근 허용
-                         *
-                         * 로그인 API는 JWT를 발급받기 전에
-                         * 호출해야 하므로 인증 없이 접근할 수 있어야 한다.
-                         */
-                        .requestMatchers("/api/v2/auth/login","/swagger-ui/**","/v3/api-docs/**")
-                        .permitAll()
+                                        /*
+                                         * 로그인 API와 Swagger 관련 API는
+                                         * 인증되지 않은 사용자도 접근할 수 있다.
+                                         *
+                                         * permitAll():
+                                         * 로그인 여부와 관계없이 접근 허용
+                                         *
+                                         * 로그인 API는 JWT를 발급받기 전에
+                                         * 호출해야 하므로 인증 없이 접근할 수 있어야 한다.
+                                         */
+                                        .requestMatchers(
+                                                "/api/v2/auth/login",
+                                                "/swagger-ui/**",
+                                                "/v3/api-docs/**")
+                                        .permitAll()
 
-                        /*
-                         * POST /api/v2/user/{userId}
-                         *
-                         * 지정한 경로의 POST 요청을
-                         * 로그인 여부와 관계없이 허용한다.
-                         *
-                         * 주의:
-                         * 실제 회원가입 API가 이 경로를 사용하는지
-                         * UserController에서 확인해야 한다.
-                         */
-                        .requestMatchers(HttpMethod.POST,"/api/v2/user/{userId}")
-                        .permitAll()
+                                        /*
+                                         * POST /api/v2/user/{userId}
+                                         *
+                                         * 지정한 경로의 POST 요청을
+                                         * 로그인 여부와 관계없이 허용한다.
+                                         *
+                                         * 주의:
+                                         * 실제 회원가입 API가 이 경로를 사용하는지
+                                         * UserController에서 확인해야 한다.
+                                         */
+                                        .requestMatchers(HttpMethod.POST, "/api/v2/user/{userId}")
+                                        .permitAll()
 
-                        /*
-                         * GET /api/v2/user/{userId}
-                         *
-                         * 특정 사용자의 정보를 조회하는 API에
-                         * 인증 없이 접근할 수 있도록 허용한다.
-                         *
-                         * 단, 사용자 정보 중 비밀번호나 개인정보가
-                         * 외부에 노출되지 않도록 주의해야 한다.
-                         */
-                        .requestMatchers(HttpMethod.GET, "/api/v2/user/{userId}")
-                        .permitAll()
+                                        /*
+                                         * GET /api/v2/user/{userId}
+                                         *
+                                         * 특정 사용자의 정보를 조회하는 API에
+                                         * 인증 없이 접근할 수 있도록 허용한다.
+                                         *
+                                         * 단, 사용자 정보 중 비밀번호나 개인정보가
+                                         * 외부에 노출되지 않도록 주의해야 한다.
+                                         */
+                                        .requestMatchers(HttpMethod.GET, "/api/v2/user/{userId}")
+                                        .permitAll()
 
-                        /*
-                         * DELETE /api/v2/user/{userId}
-                         *
-                         * 특정 사용자를 삭제하는 API는
-                         * ADMIN 역할을 가진 사용자만 접근할 수 있다.
-                         *
-                         * hasRole("ADMIN")은 내부적으로
-                         * ROLE_ADMIN 권한이 있는지 검사한다.
-                         *
-                         * 따라서 Role enum에 정의했던
-                         * ROLE_ADMIN과 연결된다.
-                         */
-                        .requestMatchers(HttpMethod.DELETE, "/api/v2/user/{userId}")
-                        .hasRole("ADMIN")
+                                        /*
+                                         * DELETE /api/v2/user/{userId}
+                                         *
+                                         * 특정 사용자를 삭제하는 API는
+                                         * ADMIN 역할을 가진 사용자만 접근할 수 있다.
+                                         *
+                                         * hasRole("ADMIN")은 내부적으로
+                                         * ROLE_ADMIN 권한이 있는지 검사한다.
+                                         *
+                                         * 따라서 Role enum에 정의했던
+                                         * ROLE_ADMIN과 연결된다.
+                                         */
+                                        .requestMatchers(HttpMethod.DELETE, "/api/v2/user/{userId}")
+                                        .hasRole("ADMIN")
 
-                        /*
-                         * 위에서 별도로 허용하지 않은 모든 요청은
-                         * 인증된 사용자만 접근할 수 있다.
-                         *
-                         * authenticated():
-                         * 정상적으로 인증된 사용자라면 접근 허용
-                         *
-                         * 단, 이 설정만으로 모든 사용자의
-                         * 데이터 접근 권한까지 검증되는 것은 아니다.
-                         */
-                        .anyRequest()
-                        .authenticated())
+                                        /*
+                                         * 위에서 별도로 허용하지 않은 모든 요청은
+                                         * 인증된 사용자만 접근할 수 있다.
+                                         *
+                                         * authenticated():
+                                         * 정상적으로 인증된 사용자라면 접근 허용
+                                         *
+                                         * 단, 이 설정만으로 모든 사용자의
+                                         * 데이터 접근 권한까지 검증되는 것은 아니다.
+                                         */
+                                        .anyRequest()
+                                        .authenticated())
 
                 /*
                  * 인증 과정에서 예외가 발생했을 때의 처리 방법을 설정한다.
@@ -205,8 +212,9 @@ public class SecurityConfig{
                  * HTTP 401 응답을 생성한다.
                  */
                 .exceptionHandling(
-                        exceptionHandling -> exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                )
+                        exceptionHandling ->
+                                exceptionHandling.authenticationEntryPoint(
+                                        jwtAuthenticationEntryPoint))
 
                 /*
                  * 서버의 HTTP 세션 생성 정책을 설정한다.
@@ -223,8 +231,8 @@ public class SecurityConfig{
                  */
                 .sessionManagement(
                         sessionManagement ->
-                                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                                sessionManagement.sessionCreationPolicy(
+                                        SessionCreationPolicy.STATELESS));
 
         /*
          * JWT 인증 필터를 Spring Security 필터 체인에 추가한다.
@@ -239,7 +247,6 @@ public class SecurityConfig{
          * 후속 보안 처리 단계에서 사용할 수 있다.
          */
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         /*
          * 지금까지 설정한 보안 정책과 필터를 기반으로

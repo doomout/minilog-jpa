@@ -1,12 +1,11 @@
 package com.asdf.minilog.security;
 
+import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +14,6 @@ public class MinilogUserDetails implements UserDetails { // 사용자 정보를 
     private Long id;
     private String username; // 사용자명
     private String password; // 비밀번호
-    private Collection<? extends GrantedAuthority> authorities; // 권한(정확한 타입은 모르겠는데 최소한 GrantedAuthority 계열이어야 한다)
+    private Collection<? extends GrantedAuthority>
+            authorities; // 권한(정확한 타입은 모르겠는데 최소한 GrantedAuthority 계열이어야 한다)
 }

@@ -2,14 +2,13 @@ package com.asdf.minilog.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
 /*
  * 인증되지 않은 사용자가 보호된 API에 접근했을 때 호출되는 클래스.
@@ -40,7 +39,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(
             jakarta.servlet.http.HttpServletRequest request,
             jakarta.servlet.http.HttpServletResponse response,
-            AuthenticationException authException) throws IOException, ServletException {
+            AuthenticationException authException)
+            throws IOException, ServletException {
         // HTTP 상태 코드를 401 Unauthorized로 설정한다.
         // 401은 "이 요청을 처리하려면 인증이 필요합니다"라는 의미이다.
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

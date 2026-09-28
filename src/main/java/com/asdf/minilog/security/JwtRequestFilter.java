@@ -1,6 +1,7 @@
 package com.asdf.minilog.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,28 +13,26 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter { // 요청 헤더에 포함된 JWT를 검증, 인증 하는 클래스 - HTTP 요청(Request) 하나당 한 번(Once) 실행되는 필터
+public class JwtRequestFilter
+        extends OncePerRequestFilter { // 요청 헤더에 포함된 JWT를 검증, 인증 하는 클래스 - HTTP 요청(Request) 하나당 한
+    // 번(Once) 실행되는 필터
     // 로그를 출력하기 위한 Logger
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
     // username을 이용하여 DB에서 사용자 정보를 조회하는 서비스
-    @Autowired
-    private UserDetailsService userDetailsService;
+    @Autowired private UserDetailsService userDetailsService;
 
     // JWT 생성,조회,검증 도구
-    @Autowired
-    private JwtUtil jwtTokenUtil;
+    @Autowired private JwtUtil jwtTokenUtil;
 
     // HTTP 요청이 들어올 때마다 실행되는 필터
     @Override
-    protected void doFilterInternal (
+    protected void doFilterInternal(
             jakarta.servlet.http.HttpServletRequest request,
             jakarta.servlet.http.HttpServletResponse response,
-            jakarta.servlet.FilterChain filterChain
-    ) throws jakarta.servlet.ServletException, IOException {
+            jakarta.servlet.FilterChain filterChain)
+            throws jakarta.servlet.ServletException, IOException {
         // HTTP 요청 Header에서 Authorization 값을 가져옴
         String requestTokenHeader = request.getHeader("Authorization");
 
@@ -44,7 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter { // 요청 헤더에
         String jwt = null;
 
         // Authorization 헤더가 존재하고 "Bearer "로 시작하는지 검사
-        if(requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             // "Bearer "는 7글자이므로 제거
             jwt = requestTokenHeader.substring(7);
 
@@ -65,27 +64,30 @@ public class JwtRequestFilter extends OncePerRequestFilter { // 요청 헤더에
 
         // JWT에서 username을 정상적으로 얻었고
         // 현재 SecurityContext에 아직 인증 정보가 없다면 인증 작업을 수행
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // username을 이용하여 사용자 정보를 조회
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             // JWT가 실제 사용자 정보와 일치하고 만료되지 않았는지 검사
-            if(jwtTokenUtil.validateToken(jwt, userDetails)){
+            if (jwtTokenUtil.validateToken(jwt, userDetails)) {
                 // ★ 인증 객체 생성
                 // userDetails → 인증된 사용자 정보
                 // null → 비밀번호(credentials) -> 이미 JWT로 인증하므로 비밀번호 필요 없음
                 // userDetails.getAuthorities() → ROLE_ADMIN, ROLE_AUTHOR 등의 권한
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                        = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
 
                 // 현재 HTTP 요청의 추가 정보를 인증 객체에 저장(예: IP, 세션 등의 웹 요청 정보)
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                usernamePasswordAuthenticationToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request));
 
                 // ★★★★★ 핵심 ★★★★★
                 // 검증된 사용자 인증 정보를 Spring Security의 SecurityContext에 등록
                 //
                 // 여기까지 와야 Spring Security가 "이 요청은 로그인된 사용자의 요청이구나" 라고 인식함
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                SecurityContextHolder.getContext()
+                        .setAuthentication(usernamePasswordAuthenticationToken);
             } else {
                 // JWT 검증 실패
                 logger.warn("JWT is not valid");

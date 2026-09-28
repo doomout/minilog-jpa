@@ -28,12 +28,11 @@ public class AuthenticationController {
     private UserService userService;
 
     @Autowired
-    public AuthenticationController (
+    public AuthenticationController(
             AuthenticationManager authenticationManager,
             JwtUtil jwtTokenUtil,
             UserDetailsService userDetailsService,
-            UserService userService
-    ) {
+            UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userDetailsService = userDetailsService;
@@ -41,22 +40,28 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken (
-            @RequestBody AuthenticationRequestDto authRequest
-    ) {
+    public ResponseEntity<?> createAuthenticationToken(
+            @RequestBody AuthenticationRequestDto authRequest) {
         try { // JWT 생성
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-            UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-            UserResponseDto userResponseDto = userService.getUserByUsername(userDetails.getUsername());
+                    new UsernamePasswordAuthenticationToken(
+                            authRequest.getUsername(), authRequest.getPassword()));
+            UserDetails userDetails =
+                    userDetailsService.loadUserByUsername(authRequest.getUsername());
+            UserResponseDto userResponseDto =
+                    userService.getUserByUsername(userDetails.getUsername());
 
-            return ResponseEntity.ok(AuthenticationResponseDto.builder().jwt(jwtTokenUtil.generateToken(userDetails, userResponseDto.getId())).build());
-        } catch (BadCredentialsException e) { //인증 실패시 예외
+            return ResponseEntity.ok(
+                    AuthenticationResponseDto.builder()
+                            .jwt(jwtTokenUtil.generateToken(userDetails, userResponseDto.getId()))
+                            .build());
+        } catch (BadCredentialsException e) { // 인증 실패시 예외
             logger.error("Authentication failed: {}", e.getMessage());
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        } catch(Exception e) { // 기타 예외
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during authentication");
+        } catch (Exception e) { // 기타 예외
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred during authentication");
         }
     }
 }
