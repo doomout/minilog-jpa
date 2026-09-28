@@ -15,7 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v2/user")
 public class UserController { // 사용자가 관련된 요청을 처리하는 컨트롤러
     private final UserService userService;
 
