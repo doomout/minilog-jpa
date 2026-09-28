@@ -62,7 +62,7 @@ public class ArticleController { // 게시글과 관련된 요청 처리
             @RequestBody ArticleRequestDto article) {
 
         var updateArticle =
-                articleService.updatedArticle(userDetails.getId(), articleId, article.getContent());
+                articleService.updateArticle(userDetails.getId(), articleId, article.getContent());
 
         return ResponseEntity.ok(updateArticle);
     }
