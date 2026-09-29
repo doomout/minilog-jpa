@@ -73,6 +73,15 @@ dependencies {
 	// JWT 라이브러리의 구현체를 추가
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// GraphQL 의존성 추가
+	implementation 'org.springframework.boot:spring-boot-starter-graphql'
+	implementation 'com.graphql-java-kickstart:graphql-java-tools:11.1.0'
+	implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:11.1.0'
+	implementation 'com.graphql-java:graphql-java:22.0'
+	implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
+
+	testImplementation 'org.springframework.graphql:spring-graphql-test'
 }
 
 // 테스트 태스크를 구성
