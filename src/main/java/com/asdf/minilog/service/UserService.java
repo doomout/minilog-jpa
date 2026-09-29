@@ -83,7 +83,7 @@ public class UserService { // 사용자 관련 비즈니스 로직
     }
 
     // 사용자 정보 수정
-    public UserResponseDto updatedUser(
+    public UserResponseDto updateUser(
             MinilogUserDetails userDetails, Long userId, UserRequestDto userRequestDto) {
         if (!userDetails.getAuthorities().stream()
                         .anyMatch(

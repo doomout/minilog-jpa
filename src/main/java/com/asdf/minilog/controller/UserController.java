@@ -61,7 +61,7 @@ public class UserController { // 사용자가 관련된 요청을 처리하는 �
             @AuthenticationPrincipal MinilogUserDetails userDetails,
             @PathVariable Long userId,
             @RequestBody UserRequestDto updatedUser) {
-        UserResponseDto user = userService.updatedUser(userDetails, userId, updatedUser);
+        UserResponseDto user = userService.updateUser(userDetails, userId, updatedUser);
         return ResponseEntity.ok(user);
     }
 
