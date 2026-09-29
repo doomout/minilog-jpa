@@ -1,0 +1,60 @@
+scalar Long
+scalar DateTime @specifiedBy(url:"https://tools.ietf.org/html/rfc3339")
+
+type Query {
+    getArticles(userId: Long!): [ArticleResponse]
+    getArticle(articleId: Long!): ArticleResponse
+    getFeedList(followerId: Long!): [ArticleResponse]
+    getFollowList(followerId: Long!): [FollowResponse]
+    getUsers: [UserResponse]
+    getUserById(userId: Long!): UserResponse
+}
+
+type Mutation {
+    createArticle(input: CreateArticleInput!): ArticleResponse
+    updateArticle(input: UpdateArticleInput!): ArticleResponse
+    deleteArticle(articleId: Long!): Boolean
+    follow(followeeId: Long!): FollowResponse
+    unfollow(followeeId: Long!): Boolean
+    createUser(input: CreateUserInput!): UserResponse
+    updateUser(input: UpdateUserInput!): UserResponse
+    deleteUser(userId: Long!): Boolean
+}
+
+input CreateArticleInput {
+    content: String!
+}
+
+input UpdateArticleInput {
+    articleId: Long!
+    content: String!
+}
+
+input CreateUserInput {
+    username: String!
+    password: String!
+}
+
+input UpdateUserInput {
+    userId: Long!
+    username: String
+    password: String
+}
+
+type ArticleResponse {
+    articleId: Long
+    content: String
+    authorId: Long
+    authorName: String
+    createdAt: DateTime
+}
+
+type FollowResponse {
+    followerId: Long
+    followeeId: Long
+}
+
+type UserResponse {
+    id: Long
+    username: String
+}
