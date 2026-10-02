@@ -3,6 +3,7 @@ package com.asdf.minilog.config;
 import com.asdf.minilog.security.JwtAuthenticationEntryPoint;
 import com.asdf.minilog.security.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,9 @@ public class SecurityConfig {
 
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private JwtRequestFilter jwtRequestFilter;
+
+    @Value("${sprng.graphql.graphql.path}")
+    private String graphiqlPath;
 
     @Autowired
     public SecurityConfig(
@@ -61,6 +65,9 @@ public class SecurityConfig {
                                         // 사용자 삭제는 ADMIN 권한이 필요
                                         .requestMatchers(HttpMethod.DELETE, "/api/v2/user/{userId}")
                                         .hasRole("ADMIN")
+                                        // GraphiQL 엔드포인트 인증 설정
+                                        .requestMatchers("/" + graphiqlPath)
+                                        .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .exceptionHandling(
