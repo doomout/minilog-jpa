@@ -27,9 +27,6 @@ public class SecurityConfig {
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private JwtRequestFilter jwtRequestFilter;
 
-    @Value("${sprng.graphql.graphql.path}")
-    private String graphiqlPath;
-
     @Autowired
     public SecurityConfig(
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtRequestFilter jwtRequestFilter) {
@@ -47,6 +44,9 @@ public class SecurityConfig {
             throws Exception {
         return configuration.getAuthenticationManager();
     }
+
+    @Value("${spring.graphql.graphiql.path}")
+    private String graphiqlPath;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
