@@ -50,7 +50,8 @@ public class UserControllerTest {
         MinilogUserDetails userDetails =
                 new MinilogUserDetails(1L, "testuser", "password", List.of(() -> "ROLE_AUTHOR"));
         UsernamePasswordAuthenticationToken auth =
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
@@ -64,8 +65,7 @@ public class UserControllerTest {
         UserResponseDto.builder().id(1L).username("testuser").build();
         when(userService.getUsers()).thenReturn(userResponseDtoList);
 
-        mockMvc
-                .perform(get("/api/v2/user"))
+        mockMvc.perform(get("/api/v2/user"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value(1L))
@@ -76,11 +76,11 @@ public class UserControllerTest {
 
     @Test
     public void testGetUserById() throws Exception {
-        UserResponseDto userResponseDto = UserResponseDto.builder().id(1L).username("testuser").build();
+        UserResponseDto userResponseDto =
+                UserResponseDto.builder().id(1L).username("testuser").build();
         when(userService.getUserById(anyLong())).thenReturn(Optional.of(userResponseDto));
 
-        mockMvc
-                .perform(get("/api/v2/user/1"))
+        mockMvc.perform(get("/api/v2/user/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1L))
@@ -91,11 +91,11 @@ public class UserControllerTest {
     public void testCreateUser() throws Exception {
         UserRequestDto userRequestDto =
                 UserRequestDto.builder().username("testuser").password("password").build();
-        UserResponseDto userResponseDto = UserResponseDto.builder().id(1L).username("testuser").build();
+        UserResponseDto userResponseDto =
+                UserResponseDto.builder().id(1L).username("testuser").build();
         when(userService.createUser(any(UserRequestDto.class))).thenReturn(userResponseDto);
 
-        mockMvc
-                .perform(
+        mockMvc.perform(
                         post("/api/v2/user")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(userRequestDto))
@@ -110,13 +110,13 @@ public class UserControllerTest {
     public void testUpdateUser() throws Exception {
         UserRequestDto userRequestDto =
                 UserRequestDto.builder().username("testuser").password("password").build();
-        UserResponseDto userResponseDto = UserResponseDto.builder().id(1L).username("testuser").build();
+        UserResponseDto userResponseDto =
+                UserResponseDto.builder().id(1L).username("testuser").build();
         when(userService.updateUser(
-                any(MinilogUserDetails.class), anyLong(), any(UserRequestDto.class)))
+                        any(MinilogUserDetails.class), anyLong(), any(UserRequestDto.class)))
                 .thenReturn(userResponseDto);
 
-        mockMvc
-                .perform(
+        mockMvc.perform(
                         put("/api/v2/user/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(userRequestDto))
@@ -134,10 +134,10 @@ public class UserControllerTest {
 
     @Test
     public void testGlobalExceptionHandler() throws Exception {
-        when(userService.getUserById(anyLong())).thenThrow(new UserNotFoundException("Test Exception"));
+        when(userService.getUserById(anyLong()))
+                .thenThrow(new UserNotFoundException("Test Exception"));
 
-        mockMvc
-                .perform(get("/api/v2/user/999"))
+        mockMvc.perform(get("/api/v2/user/999"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Test Exception"));
     }

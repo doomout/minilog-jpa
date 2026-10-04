@@ -55,7 +55,8 @@ public class ArticleControllerTest {
         MinilogUserDetails userDetails =
                 new MinilogUserDetails(1L, "testuser", "password", List.of(() -> "ROLE_AUTHOR"));
         UsernamePasswordAuthenticationToken auth =
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
@@ -72,8 +73,7 @@ public class ArticleControllerTest {
                         .build();
         when(articleService.createArticle(any(String.class), anyLong())).thenReturn(responseDto);
 
-        mockMvc
-                .perform(
+        mockMvc.perform(
                         post("/api/v2/article")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDto))
@@ -98,8 +98,7 @@ public class ArticleControllerTest {
                         .build();
         when(articleService.getArticleById(anyLong())).thenReturn(responseDto);
 
-        mockMvc
-                .perform(get("/api/v2/article/1"))
+        mockMvc.perform(get("/api/v2/article/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.articleId").value(1L))
                 .andExpect(jsonPath("$.content").value("Test Content"))
@@ -125,8 +124,7 @@ public class ArticleControllerTest {
         when(articleService.updateArticle(anyLong(), anyLong(), any(String.class)))
                 .thenReturn(responseDto);
 
-        mockMvc
-                .perform(
+        mockMvc.perform(
                         put("/api/v2/article/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDto))
@@ -159,8 +157,7 @@ public class ArticleControllerTest {
         List<ArticleResponseDto> responseList = Collections.singletonList(responseDto);
         when(articleService.getArticleListByUserId(anyLong())).thenReturn(responseList);
 
-        mockMvc
-                .perform(get("/api/v2/article").param("authorId", "1"))
+        mockMvc.perform(get("/api/v2/article").param("authorId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].articleId").value(articleId))
                 .andExpect(jsonPath("$[0].content").value("Test Content"))
@@ -174,8 +171,7 @@ public class ArticleControllerTest {
         when(articleService.getArticleById(anyLong()))
                 .thenThrow(new ArticleNotFoundException("Article Not Found"));
 
-        mockMvc
-                .perform(get("/api/v2/article/999"))
+        mockMvc.perform(get("/api/v2/article/999"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Article Not Found"));
     }

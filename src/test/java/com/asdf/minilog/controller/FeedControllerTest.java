@@ -58,8 +58,7 @@ public class FeedControllerTest {
         when(articleService.getFeedListByFollowerId(anyLong()))
                 .thenReturn(Collections.singletonList(articleResponseDto));
 
-        mockMvc
-                .perform(get("/api/v2/feed?followerId=1"))
+        mockMvc.perform(get("/api/v2/feed?followerId=1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].articleId").value(1L))

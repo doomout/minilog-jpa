@@ -26,7 +26,8 @@ public class MinilogGraphQLExceptionResolver extends DataFetcherExceptionResolve
         GraphQLError error;
         var handlerParameterPath = env.getExecutionStepInfo().getPath();
 
-        if (exception instanceof ArticleNotFoundException || exception instanceof UserNotFoundException) {
+        if (exception instanceof ArticleNotFoundException
+                || exception instanceof UserNotFoundException) {
             error =
                     GraphqlErrorBuilder.newError()
                             .message(exception.getMessage())
