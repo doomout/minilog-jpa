@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GraphiQL</title>
+
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #graphiql {
+            height: 100vh;
+        }
+    </style>
+
+    <script
+            src="https://unpkg.com/react@18/umd/react.production.min.js"
+            crossorigin>
+    </script>
+
+    <script
+            src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+            crossorigin>
+    </script>
+
+    <script
+            src="https://unpkg.com/graphiql@4.1.2/dist/index.umd.js"
+            crossorigin>
+    </script>
+
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/graphiql@4.1.2/dist/style.css"
+    />
+</head>
+
+<body>
+
+<div id="graphiql">Loading...</div>
+
+<script>
+    const fetcher = GraphiQL.createFetcher({
+        url: '/graphql'
+    });
+
+    ReactDOM.render(
+        React.createElement(GraphiQL, {
+            fetcher: fetcher,
+            headerEditorEnabled: true,
+            shouldPersistHeaders: true
+        }),
+        document.getElementById('graphiql')
+    );
+</script>
+
+</body>
+</html>
