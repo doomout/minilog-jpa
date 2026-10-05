@@ -29,7 +29,8 @@ public class SecurityConfig {
 
     @Autowired
     public SecurityConfig(
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtRequestFilter jwtRequestFilter) {
+            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+            JwtRequestFilter jwtRequestFilter) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtRequestFilter = jwtRequestFilter;
     }
@@ -40,8 +41,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration)
-            throws Exception {
+    public AuthenticationManager authenticationManagerBean(
+            AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -54,8 +55,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         (requests) ->
-                                requests
-                                        .requestMatchers("/api/v2/auth/login", "/swagger-ui/**", "/v3/api-docs/**")
+                                requests.requestMatchers(
+                                                "/api/v2/auth/login",
+                                                "/swagger-ui/**",
+                                                "/v3/api-docs/**")
                                         .permitAll()
                                         // 사용자 생성, 조회는 인증 없이 가능
                                         .requestMatchers(HttpMethod.POST, "/api/v2/user")
@@ -66,16 +69,19 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.DELETE, "/api/v2/user/{userId}")
                                         .hasRole("ADMIN")
                                         // GraphiQL 엔드포인트 인증 설정
-                                        .requestMatchers("/" + graphiqlPath)
+                                        //.requestMatchers("/" + graphiqlPath)
+                                        .requestMatchers("/" + graphiqlPath, "/" + graphiqlPath + "/**")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .exceptionHandling(
                         exceptionHandling ->
-                                exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                                exceptionHandling.authenticationEntryPoint(
+                                        jwtAuthenticationEntryPoint))
                 .sessionManagement(
                         sessionManagement ->
-                                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                                sessionManagement.sessionCreationPolicy(
+                                        SessionCreationPolicy.STATELESS));
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
